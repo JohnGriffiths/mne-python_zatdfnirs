@@ -38,4 +38,8 @@ __all__ = [
     'misc', 'mtrf', 'multimodal', 'opm', 'phantom_4dbti', 'sample',
     'sleep_physionet', 'somato', 'spm_face', 'ssvep', 'testing',
     'visual_92_categories', 'limo', 'erp_core', 'epilepsy_ecog'
+
+
+# JG ADDED TO KEEP THIS FORK WORKING FOR THE TIME BEING
+from ._fetch import fetch_dataset
 ]
