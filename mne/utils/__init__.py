@@ -11,10 +11,10 @@ from .check import (check_fname, check_version, check_random_state,
                     _check_pandas_index_arguments, _check_mayavi_version,
                     _check_event_id, _check_ch_locs, _check_compensation_grade,
                     _check_if_nan, _is_numeric, _ensure_int, _check_preload,
-                    _validate_type, _check_info_inv, _check_pylsl_installed,
+                    _validate_type, _check_info_inv, # _check_pylsl_installed, # JG_MOD
                     _check_channels_spatial_filter, _check_one_ch_type,
-                    _check_rank, _check_option, _check_depth, _check_combine,
-                    _check_path_like, _check_src_normal, _check_stc_units,
+                    _check_rank, _check_option, _check_depth, _check_combine, # _check_path_like, # JG_MOD
+                    _check_src_normal, _check_stc_units,
                     _check_pyqt5_version, _check_sphere, _check_time_format,
                     _check_freesurfer_home, _suggest, _require_version,
                     _on_missing, _check_on_missing, int_like, _safe_input,

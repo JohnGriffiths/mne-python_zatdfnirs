@@ -4,6 +4,7 @@
 #
 # License: BSD-3-Clause
 
+import importlib
 from builtins import input  # no-op here but facilitates testing
 from difflib import get_close_matches
 from distutils.version import LooseVersion
@@ -155,6 +156,12 @@ def _check_fname(fname, overwrite=False, must_exist=False, name='File',
                  need_dir=False):
     """Check for file existence, and return string of its absolute path."""
     _validate_type(fname, 'path-like', name)
+    fname = str(
+        Path(fname)
+        .expanduser()
+        .absolute()
+    )
+
     if op.exists(fname):
         if not overwrite:
             raise FileExistsError('Destination file exists. Please use option '
@@ -177,7 +184,8 @@ def _check_fname(fname, overwrite=False, must_exist=False, name='File',
                     f'{name} does not have read permissions: {fname}')
     elif must_exist:
         raise FileNotFoundError(f'{name} does not exist: {fname}')
-    return str(op.abspath(fname))
+
+    return fname
 
 
 def _check_subject(first, second, *, raise_error=True,
@@ -251,43 +259,43 @@ def _check_compensation_grade(info1, info2, name1,
             % (name1, grade1, name2, grade2))
 
 
-def _check_pylsl_installed(strict=True):
-    """Aux function."""
+def _soft_import(name, purpose, strict=True):
+    """Import soft dependencies, providing informative errors on failure.
+
+    Parameters
+    ----------
+    name : str
+        Name of the module to be imported. For example, 'pandas'.
+    purpose : str
+        A very brief statement (formulated as a noun phrase) explaining what
+        functionality the package provides to MNE-Python.
+    strict : bool
+        Whether to raise an error if module import fails.
+    """
     try:
-        import pylsl
-        return pylsl
-    except ImportError:
-        if strict is True:
-            raise RuntimeError('For this functionality to work, the pylsl '
-                               'library is required.')
+        mod = importlib.import_module(name)
+        return mod
+    except (ImportError, ModuleNotFoundError):
+        if strict:
+            raise RuntimeError(f'For {purpose} to work, the {name} module is '
+                               'needed, but it could not be imported.')
         else:
             return False
 
 
 def _check_pandas_installed(strict=True):
     """Aux function."""
-    try:
-        import pandas
-        return pandas
-    except ImportError:
-        if strict is True:
-            raise RuntimeError('For this functionality to work, the Pandas '
-                               'library is required.')
-        else:
-            return False
+    return _soft_import('pandas', 'dataframe integration', strict=strict)
 
 
 def _check_eeglabio_installed(strict=True):
     """Aux function."""
-    try:
-        import eeglabio
-        return eeglabio
-    except ImportError:
-        if strict is True:
-            raise RuntimeError('For this functionality to work, the eeglabio '
-                               'library is required.')
-        else:
-            return False
+    return _soft_import('eeglabio', 'exporting to EEGLab', strict=strict)
+
+
+def _check_edflib_installed(strict=True):
+    """Aux function."""
+    return _soft_import('EDFlib', 'exporting to EDF', strict=strict)
 
 
 def _check_pandas_index_arguments(index, valid):
@@ -419,7 +427,7 @@ def _validate_type(item, types=None, item_name=None, type_name=None):
                         f"got {type(item)} instead.")
 
 
-def _check_path_like(item):
+def _path_like(item):
     """Validate that `item` is `path-like`.
 
     Parameters
@@ -812,3 +820,18 @@ def _ensure_events(events):
         raise ValueError(
             f'events must be of shape (N, 3), got {events.shape}')
     return events
+
+
+def _to_rgb(*args, name='color', alpha=False):
+    from matplotlib.colors import colorConverter
+    func = colorConverter.to_rgba if alpha else colorConverter.to_rgb
+    try:
+        return func(*args)
+    except ValueError:
+        args = args[0] if len(args) == 1 else args
+        raise ValueError(
+            f'Invalid RGB{"A" if alpha else ""} argument(s) for {name}: '
+            f'{repr(args)}') from None
+
+
+

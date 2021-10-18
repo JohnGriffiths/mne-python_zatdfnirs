@@ -31,7 +31,7 @@ from .utils import (get_subjects_dir, _check_subject, logger, verbose, _pl,
                     fill_doc, _check_option, _validate_type, _check_src_normal,
                     _check_stc_units, _check_pandas_installed,
                     _check_pandas_index_arguments, _convert_times, _ensure_int,
-                    _build_data_frame, _check_time_format, _check_path_like,
+                    _build_data_frame, _check_time_format,# JG_MOD _check_path_like,
                     sizeof_fmt, object_size)
 from .viz import (plot_source_estimates, plot_vector_source_estimates,
                   plot_volume_source_estimates)
