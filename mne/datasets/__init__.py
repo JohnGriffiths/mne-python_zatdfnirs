@@ -37,9 +37,14 @@ __all__ = [
     'fetch_hcp_mmp_parcellation', 'fieldtrip_cmc', 'hf_sef', 'kiloword',
     'misc', 'mtrf', 'multimodal', 'opm', 'phantom_4dbti', 'sample',
     'sleep_physionet', 'somato', 'spm_face', 'ssvep', 'testing',
-    'visual_92_categories', 'limo', 'erp_core', 'epilepsy_ecog'
-
+    'visual_92_categories', 'limo', 'erp_core', 'epilepsy_ecog']
 
 # JG ADDED TO KEEP THIS FORK WORKING FOR THE TIME BEING
+__all__ += 'fetch_dataset'
+
 from ._fetch import fetch_dataset
-]
+
+
+
+
+
